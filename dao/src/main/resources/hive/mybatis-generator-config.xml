@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <!--targetRuntime="MyBatis3"-->
+    <context id="hive-prod" defaultModelType="flat" targetRuntime="MyBatis3Simple">
+        <!-- 生成的Java文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8" />
+        <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+        <property name="beginningDelimiter" value="`" />
+        <property name="endingDelimiter" value="`" />
+
+        <!-- 注释生成器 -->
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+        <commentGenerator>
+            <!-- 不希望生成的注释中包含时间戳 -->
+            <property name="suppressDate" value="true" />
+            <!-- 是否不生成注释 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!-- 必须要有的，使用这个配置链接数据库 @TODO:是否可以扩展 -->
+        <jdbcConnection driverClass="org.apache.hive.jdbc.HiveDriver"
+                        connectionURL="jdbc:hive2://8.136.192.229:10000"
+                        userId="hadoop"
+                        password="hadoop">
+        </jdbcConnection>
+
+        <!-- 生成domain对象 -->
+        <javaModelGenerator targetPackage="hive.po" targetProject="src/main/java">
+            <!-- 是否让schema作为包的后缀，默认为false -->
+            <!--<property name="enableSubPackages" value="false"/>-->
+
+            <!-- 是否针对string类型的字段在set方法中进行修剪，默认false -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成Mapper文件 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!-- 生成Mapper接口 -->
+        <javaClientGenerator targetPackage="hive.dao" type="XMLMAPPER"  targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+
+    <!-- schema为数据库名，oracle需要配置，mysql不需要配置。
+     tableName为对应的数据库表名
+     domainObjectName 是要生成的实体类名(可以不指定)
+     enableXXXByExample 默认为 true， 为 true 会生成一个对应Example帮助类，帮助你进行条件查询，不想要可以设为false
+     -->
+     <table schema="profile" tableName="test"
+               enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false" selectByExampleQueryId="false">
+            <!--是否使用实际列名,默认为false-->
+            <!--<property name="useActualColumnNames" value="false" />-->
+     </table>
+
+
+    </context>
+</generatorConfiguration>
